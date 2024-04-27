@@ -2,42 +2,48 @@ import pygame
 pygame.init()
 import random
 font = pygame.font.Font(None,24)
-Tekst= font.render("RGB", True,(200,200,200))
+Tekst= font.render("Пук", True,(200,200,200))
 
+score = 0
 clock = pygame.time.Clock()
 window = pygame.display.set_mode((1366,700))
 back_color = (255, 198, 112)
 game = True
-
-
-player = pygame.Rect(350,250,100,200)
-player1 = pygame.Rect(550,250,100,200)
-player2 = pygame.Rect(750,250,100,200)
-player3 = pygame.Rect(950,250,100,200)
-
+players = [
+pygame.Rect(350,250,100,200),
+pygame.Rect(550,250,100,200),
+pygame.Rect(750,250,100,200),
+pygame.Rect(950,250,100,200)]
+text_on_areo = random.choice(players)
+start_time = pygame.time.get_ticks()
 while game:
-
-     
-    window.fill(back_color)
-     
     
-    window.blit(Tekst,(50,50))
+    window.fill(back_color)
+    window.blit(Tekst,(380,350))
+    
+    for pl in players:
+        pygame.draw.rect(window,(100,50,50),pl)
 
-    pygame.draw.rect(window,(103, 239, 112) ,player)
-    pygame.draw.rect(window,(103, 239, 112) ,player1)
-    pygame.draw.rect(window,(103, 239, 112) ,player2)
-    pygame.draw.rect(window,(103, 239, 112) ,player3)
+    current_time = pygame.time.get_ticks()
+    elapsed_time = current_time - start_time
+    if elapsed_time > 1000:
+        text_on_areo = random.choice(players)
+        start_time = pygame.time.get_ticks()
+    window.blit(Tekst,(text_on_areo.x+30,text_on_areo.y+100))
 
 
+  
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             game = False
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            print(10)
+            x,y = event.pos
+            if text_on_areo.collidepoint(x,y):
+                score += 1
+                print(score)
         elif event.type == pygame.KEYDOWN:
-            print("1")
-
+            print('Пук')
 
 
     clock.tick(120)
